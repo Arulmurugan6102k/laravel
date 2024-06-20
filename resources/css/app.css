@@ -1,0 +1,263 @@
+h1 {
+  text-align: center;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+hr {
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+footer {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.link {
+  text-align: center;
+  color: #278fb2;
+}
+
+/* VARIABLES */
+:root {
+  --color-off: #bf1e1e;
+  --color-on: #0cb018;
+}
+
+/* CHECKBOX */
+.checkbox {
+  width: 100px; /* Adjusted width */
+  margin: 0 auto;
+}
+
+.checkbox__container {
+  display: block;
+  position: relative;
+  height: 50px; /* Adjusted height */
+}
+
+.checkbox__toggle {
+  display: none;
+}
+
+.checkbox__toggle:checked + .checkbox__checker {
+  left: calc(100% - 35px); /* Moved slightly forward */
+  background-color: #fff; /* Keep the background white */
+}
+
+.checkbox__toggle:checked ~ .checkbox__path .path--top {
+  stroke-dashoffset: 0px;
+  stroke: var(--color-on);
+}
+
+.checkbox__toggle:checked ~ .checkbox__path .path--bottom {
+  stroke-dasharray: 14px 360px;
+  stroke-dashoffset: 0px;
+  stroke: var(--color-on);
+}
+
+.checkbox__checker {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%); /* Center vertically */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  display: block;
+  width: 30px; /* Adjusted size */
+  height: 30px; /* Adjusted size */
+  background-color: #fff;
+  opacity: 0.5;
+  border-radius: 50%;
+  transition: 1s;
+  z-index: 9;
+}
+
+.checkbox__bg,
+.checkbox__path {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.checkbox__bg .shape-bg {
+  fill: #aaa;
+}
+
+.checkbox__path {
+  z-index: 9;
+}
+
+.checkbox__path .shape-bg {
+  fill: #fff;
+  stroke-width: 1px;
+  stroke: #aaa;
+}
+
+.checkbox__path .path {
+  stroke-width: 4px;
+  stroke: var(--color-off);
+  fill: none;
+  stroke-linecap: round;
+  transition: 1s;
+}
+
+.checkbox__path .path--top {
+  stroke-dasharray: 33px 360px;
+  stroke-dashoffset: -336px;
+}
+
+.checkbox__path .path--bottom {
+  stroke-dasharray: 33px 360px;
+  stroke-dashoffset: -324px;
+}
+
+#checkbox__circle {
+  z-index: 9;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  fill: #fff;
+}
+
+/* ANIMATION */
+.anim {
+  transition-timing-function: cubic-bezier(0.385, -0.6, 0.685, 1.59);
+  transition-duration: 0.2s;
+}
+
+.anim--smallerize {
+  transform: scale(0.6, 0.6);
+}
+
+.anim--speed {
+  animation-duration: 0.5s;
+  animation-name: speedSmall;
+}
+
+/* TRANSITIONS TEST */
+@keyframes speed {
+  0% {
+    transform: scaleY(0.6);
+  }
+  30% {
+    transform: scaleY(2.3);
+  }
+  60% {
+    transform: scaleY(2.3);
+  }
+  100% {
+    transform: scaleY(0.6);
+  }
+}
+
+@keyframes speedSmall {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.7, 0.7);
+  }
+  35% {
+    transform: scale(0.7, 0.7);
+  }
+  50% {
+    transform: scale(0.7, 0.3);
+  }
+  65% {
+    transform: scale(0.7, 0.7);
+  }
+  75% {
+    transform: scale(0.7, 0.7);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+
+        .__web-inspector-hide-shortcut__,
+        .__web-inspector-hide-shortcut__ *,
+        .__web-inspector-hidebefore-shortcut__::before,
+        .__web-inspector-hideafter-shortcut__::after {
+            visibility: hidden !important;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2em 0.5em;
+            background-color: #d4f9d4;
+            color: #1fa750;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #1f9d1f;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /* Inactive status styles */
+        .status-indicator.inactive {
+            background-color: #f9d4d4;
+            color: #9d1f1f;
+        }
+
+        .status-indicator.inactive .status-dot {
+            background-color: #9d1f1f;
+        }
+
+
+ 
+        .__web-inspector-hide-shortcut__,
+        .__web-inspector-hide-shortcut__ *,
+        .__web-inspector-hidebefore-shortcut__::before,
+        .__web-inspector-hideafter-shortcut__::after {
+            visibility: hidden !important;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2em 0.5em;
+            background-color: #d4f9d4;
+            color: #1fa750;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #1f9d1f;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /* Inactive status styles */
+        .status-indicator.inactive {
+            background-color: #f9d4d4;
+            color: #9d1f1f;
+        }
+
+        .status-indicator.inactive .status-dot {
+            background-color: #9d1f1f;
+        }
