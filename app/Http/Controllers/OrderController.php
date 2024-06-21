@@ -9,9 +9,9 @@ use App\Models\ProductType;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Exports\OrdersExport;
-use App\Imports\OrdersImport;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
-;
+
 use PDF;
 
 
@@ -221,37 +221,8 @@ class OrderController extends Controller
 
     public function import(Request $request)
     {
-      
-          // Validate the request
-          $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:xlsx,xls|max:2048' // Ensure file is .xlsx or .xls and maximum size of 2MB
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-
-        // Process the Excel file
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->getRealPath();
-            $data = \Excel::load($path)->get(); // Load the Excel file
-
-            if ($data->count()) {
-                foreach ($data as $key => $value) {
-                    // Validate and insert into database (assuming 'users' table)
-                    User::create([
-                        'name' => $value->name,
-                        'email' => $value->email,
-                        // Add other fields as needed
-                    ]);
-                }
-            }
-        }
-
-        return redirect()->route('import.form')->with('success', 'Users imported successfully.');
-
+       
+        return redirect()->route('dashboard')->with('success', 'Order updated successfully.');
     }
     
 
