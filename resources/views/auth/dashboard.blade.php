@@ -439,12 +439,12 @@
                                                                                                                 <i class='fa-solid fa-file-pdf'></i>
                                                                                                             </a>
                                                                                                             <a href="#" class="btn btn-danger btn-circle delete-button"
-                                                                                                                data-order-id="{{ $order->id }}">
+                                                                                                                data-order="{{ $order->id }}">
                                                                                                                 <i class="fas fa-trash"></i>
                                                                                                             </a>
                                                                                                         </div>
                                                                                                         <form id="delete-form"
-                                                                                                            action="{{ route('orders.destroy', [$order->id]) }}"
+                                                                                                            action="{{ route('orders.destroy', $order->id) }}"
                                                                                                             method="POST" style="display: none;">
                                                                                                             @csrf
                                                                                                             @method('DELETE')
@@ -494,7 +494,6 @@
     <script>
 
         $('#export').click(function() {
-            console.log('form submitted')
         $('#exportForm').submit();
         console.log($('#exportForm').val());
     });
@@ -571,14 +570,16 @@
             }	
         });
 
-            // alert when deleting the order
-            $('.delete-button').on('click', function (e) {
-                e.preventDefault();
-                let id = $(this).data('order-id');
-                if (confirm('Are you sure you want to delete?')) {
-                    $('#delete-form-' + id).submit();
-                }
-            });
+             // Click event handler for delete buttons
+        $('.delete-button').on('click', function(e) {
+            e.preventDefault();
+            let orderId = $(this).data('order');
+            console.log(orderId)
+
+            if (confirm('Are you sure you want to delete this order?')) {
+                $('#delete-form-' + orderId).submit();
+            }
+        });
 
         });
     </script>

@@ -28,6 +28,11 @@ class Order extends Model
             'deleted_by',
         ];
 
+        public function setOrderNoAttribute($value)
+    {
+        $this->attributes['order_no'] = 'ORD_' . $this->id;
+    }
+
         public function setProductsIdAttribute($value)
     {
         // Ensure products_id is always stored as a JSON string
