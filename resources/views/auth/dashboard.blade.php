@@ -107,6 +107,27 @@
             <i class="icon wb-check" aria-hidden="true"></i> {{ session('success') }}
         </div>
     @endif
+    <!-- Modal for Preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Preview Excel File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="fileDetails">No file selected.</p>
+                <div id="filePreview"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="importForm" class="btn btn-primary" id="importBtn">Import Data</button>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Page Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -224,24 +245,25 @@
                         <h6 class="mt-2 m-0 font-weight-bold text-primary">Order list</h6>
                         <div class="d-flex justify-content-center">
                             <div class="d-flex justify-content-center">
-                            <div >
-                                    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
-                                        style="margin-left: 16px;height: 37.22222px;width: 130px;">
-                                        <a style="text-decoration: none; color: inherit;"
-                                            href="http://localhost/test/userloginregister/orders/create">
-                                            <span><i class="fa-solid fa-file-import"></i>
-                                            Import</a></button><a style="text-decoration: none; color: inherit;"
-                                        href="http://localhost/userloginregister/addprod">
-                                    </a>
+                                <div>
+                                <form id="importForm" action="{{route('orders.import')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name="file" id="file-input" style="display: none;" accept=".xlsx,.xls">
+                                <button type="button" class="btn btn-success btn-sm shadow-sm"
+                                        style="margin-left: 16px; height: 37.22222px; width: 130px;"
+                                        onclick="document.getElementById('file-input').click();">
+                                    <span><i class="fa-solid fa-file-import"></i> Import</span>
+                                </button>
+                                </form>
                                 </div>
 
                                 <div class="me-3">
-                                    <button class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
+                                    <button id="export" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
                                         style="margin-left: 16px;height: 37.22222px;width: 130px;">
                                         <a style="text-decoration: none; color: inherit;"
-                                            href="http://localhost/test/userloginregister/orders/create">
+                                            >
                                             <span><i class="fa-solid fa-file-export"></i>
-                                            Export</a></button><a style="text-decoration: none; color: inherit;"
+                                                Export</a></button><a style="text-decoration: none; color: inherit;"
                                         href="http://localhost/userloginregister/addprod">
                                     </a>
                                 </div>
@@ -306,6 +328,8 @@
                                 <div class="row"></div>
                                 <div class="row">
                                     <div class="col-sm-12">
+                                    <form id="exportForm" action="{{ route('orders.export') }}" method="get">
+                                    @csrf
                                         <table class="table table-bordered dataTable" id="dataTable" width="100%"
                                             cellspacing="0" role="grid" aria-describedby="dataTable_info"
                                             style="width: 100%;">
@@ -327,7 +351,7 @@
                                                                             margin-right: 0px;
                                                                             margin-left: -25;
                                                                         ">Select All</p>
-                                                                    <input type="checkbox">
+                                                                    <input id="selectAll" type="checkbox">
                                                                     <div class="checkmark"></div>
                                                                 </label>
                                                             </div>
@@ -362,81 +386,87 @@
                                                 $counter = 1; // Initialize counter
                                             @endphp
                                             <tbody id="table-body-content">
-                                                @foreach($paginatedResults as $order)
-                                                                                                    <tr>
-                                                                                                        <td style="
-                                                        width: 56px;
-                                                    ">
-                                                                                                            <label class="container" style="
-                                                        margin-left: 10px;
-                                                        padding-left: 15px;
-                                                    ">
-                                                                                                                <input type="checkbox" >
-                                                                                                                <div class="checkmark" style="
-                                                        margin-top: 10px;
-                                                    "></div>
-                                                                                                            </label>
-                                                                                                        </td>
-                                                                                                        <td>{{ $counter }}</td>
-                                                                                                        <td>{{$order->order_no}}</td>
-                                                                                                        <td>{{$order->customer_name}}</td>
-                                                                                                        <td>{{$order->customer_email}}</td>
-                                                                                                        <td>{{$order->customer_mob_no}}</td>
-                                                                                                        <td>{{ $countries[$order->customer_country_id] ?? 'Unknown' }}</td>
-                                                                                                        <td>{{$order->product_type_name}}</td>
-                                                                                                        <td>
+                                                @foreach($paginatedResults as $order) 
+                                                                                                <tr>
+                                                                                               
+                                                                                                    <td style="
+                                                                                                        width: 56px;
+                                                                                                    ">
+                                                                                                        <label class="container" style="
+                                                                                                        margin-left: 10px;
+                                                                                                        padding-left: 15px;
+                                                                                                    ">
+                                                                                                    
+                                                                                                    <input value="{{$order->id}}" name="order_ids[]" class="checkmark" type="checkbox" >
+                                                                                                    
+                                                                                                            <div class="checkmark" style="
+                                                                                                        margin-top: 10px;
+                                                                                                    "></div>
+                                                                                                        </label>
+                                                                                                    </td>
+                                                                                                    
+                                                                                                    <td>{{ $counter }}</td>
+                                                                                                    <td>{{$order->order_no}}</td>
+                                                                                                    <td>{{$order->customer_name}}</td>
+                                                                                                    <td>{{$order->customer_email}}</td>
+                                                                                                    <td>{{$order->customer_mob_no}}</td>
+                                                                                                    <td>{{ $countries[$order->customer_country_id] ?? 'Unknown' }}</td>
+                                                                                                    <td>{{$order->product_type_name}}</td>
+                                                                                                    <td>
 
-                                                                                                            <button
-                                                                                                                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                                                                                                                style="height: 37.22222px; width: 130px;"
-                                                                                                                onclick="fetchOrderProductData('{{ $order->products_id }}')">
-                                                                                                                <a style="text-decoration: none; color: inherit;"
-                                                                                                                    data-toggle="modal" data-target="#productListModal">
-                                                                                                                    <span><i class="fas fa-eye"></i></span> View products
-                                                                                                                </a>
-                                                                                                            </button>
+                                                                                                        <button
+                                                                                                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                                                                                            style="height: 37.22222px; width: 130px;"
+                                                                                                            onclick="fetchOrderProductData('{{ $order->products_id }}')">
+                                                                                                            <a style="text-decoration: none; color: inherit;"
+                                                                                                                data-toggle="modal" data-target="#productListModal">
+                                                                                                                <span><i class="fas fa-eye"></i></span> View products
+                                                                                                            </a>
+                                                                                                        </button>
 
-                                                                                                        </td>
-                                                                                                        <td>₹ {{$order->order_amount}}.Rs</td>
-                                                                                                        <td>
-                                                                                                            <div class="d-flex jsutify-content-center align-itmes-center">
-                                                                                                                <div class="">
-                                                                                                                    <a href="{{route('orders.edit', [$order->id])}}"
-                                                                                                                        class="btn btn-primary btn-circle me-2" id="">
-                                                                                                                        <i class="fas fa-edit"></i>
-                                                                                                                    </a>
-                                                                                                                </div>
-                                                                                                                <a href="{{ route('orders.generatePdf', [$order->id, $order->products_id,]) }}"
-                                                                                                                    class="btn btn-warning btn-circle me-2" id="">
-                                                                                                                    <i class='fa-solid fa-file-pdf'></i>
-                                                                                                                </a>
-                                                                                                                <a href="#" class="btn btn-danger btn-circle delete-button"
-                                                                                                                    data-order-id="{{ $order->id }}">
-                                                                                                                    <i class="fas fa-trash"></i>
+                                                                                                    </td>
+                                                                                                    <td>₹ {{$order->order_amount}}.Rs</td>
+                                                                                                    <td>
+                                                                                                        <div class="d-flex jsutify-content-center align-itmes-center">
+                                                                                                            <div class="">
+                                                                                                                <a href="{{route('orders.edit', [$order->id])}}"
+                                                                                                                    class="btn btn-primary btn-circle me-2" id="">
+                                                                                                                    <i class="fas fa-edit"></i>
                                                                                                                 </a>
                                                                                                             </div>
-                                                                                                            <form id="delete-form"
-                                                                                                                action="{{ route('orders.destroy', [$order->id]) }}"
-                                                                                                                method="POST" style="display: none;">
-                                                                                                                @csrf
-                                                                                                                @method('DELETE')
-                                                                                                            </form>
-                                                                                        </div>
-                                                                                        </td>
-                                                                                        </tr>
-                                                                                        @php
-                                                                                            $counter++; // Increment counter after each row
-                                                                                        @endphp
-
+                                                                                                            <a href="{{ route('orders.generatePdf', [$order->id, $order->products_id,]) }}"
+                                                                                                                class="btn btn-warning btn-circle me-2" id="">
+                                                                                                                <i class='fa-solid fa-file-pdf'></i>
+                                                                                                            </a>
+                                                                                                            <a href="#" class="btn btn-danger btn-circle delete-button"
+                                                                                                                data-order-id="{{ $order->id }}">
+                                                                                                                <i class="fas fa-trash"></i>
+                                                                                                            </a>
+                                                                                                        </div>
+                                                                                                        <form id="delete-form"
+                                                                                                            action="{{ route('orders.destroy', [$order->id]) }}"
+                                                                                                            method="POST" style="display: none;">
+                                                                                                            @csrf
+                                                                                                            @method('DELETE')
+                                                                                                        </form>
+                                                                                    </div>
+                                                                                    </td>
+                                                                                    </tr>
+                                                                                    @php
+                                                                                        $counter++; // Increment counter after each row
+                                                                                    @endphp
+                                               
                                                 @endforeach
                                     </tbody>
                                     </table>
+                                    </form>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center align-items-center">
-                                <div>
-                                </div>
-                            </div>
+                    <div>
+                        {{ $paginatedResults->links() }}
+                    </div>
+                </div>
                         </div>
                     </div>
                 </div>
@@ -458,7 +488,16 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script>
+
+        $('#export').click(function() {
+            console.log('form submitted')
+        $('#exportForm').submit();
+        console.log($('#exportForm').val());
+    });
 
         // reset the filter 
         function resetForm() {
@@ -523,6 +562,15 @@
         }
 
         $(document).ready(function () {
+
+            $('#selectAll').click(function(){
+            if (this.checked) {
+                $(".checkmark").prop("checked", true);
+            } else {
+                $(".checkmark").prop("checked", false);
+            }	
+        });
+
             // alert when deleting the order
             $('.delete-button').on('click', function (e) {
                 e.preventDefault();
@@ -534,6 +582,49 @@
 
         });
     </script>
+
+<script>
+   // Show preview modal and file details when file is selected
+    $('#file-input').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var fileName = file.name;
+            var fileSize = file.size;
+            var fileType = file.type;
+            $('#fileDetails').html(`
+                File: ${fileName}<br>
+                Size: ${fileSize} bytes<br>
+                Type: ${fileType}
+            `);
+            
+            // Optional: Load preview of the file (you can implement this based on your needs)
+            // For example, using FileReader to read and display contents
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                // Display preview if needed
+                // Example: $('#filePreview').html('<pre>' + data + '</pre>');
+            };
+            reader.readAsText(file);
+
+            // Show the modal
+            $('#previewModal').modal('show');
+        } else {
+            $('#fileDetails').html('No file selected.');
+        }
+    });
+
+    // Handle form submission when Import Data button is clicked
+    $('#importBtn').click(function() {
+        $('#importForm').submit(); // Submit the form
+    });
+
+    // Close modal on cancel button click
+    $('#previewModal').on('hidden.bs.modal', function (e) {
+        $('#file').val(''); // Clear file input
+    });
+
+</script>
 
 
 

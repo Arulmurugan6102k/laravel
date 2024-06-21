@@ -9,6 +9,7 @@ use App\Models\ProductType;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Exports\OrdersExport;
+use App\Imports\OrdersImport;
 use Maatwebsite\Excel\Facades\Excel;
 ;
 use PDF;
@@ -210,11 +211,23 @@ class OrderController extends Controller
         return $pdf->download('table.pdf');
     }
 
-    public function export()
+    public function export(Request $request)
     {
         
-        return Excel::download(new OrdersExport, 'orders.xlsx');
-        dd('hi');
+        $orderIds = $request->input('order_ids');
+        return Excel::download(new OrdersExport($orderIds), 'orders.xlsx');
+
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new OrdersImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data imported successfully!');
 
     }
     
