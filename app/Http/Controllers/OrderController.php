@@ -8,6 +8,9 @@ use App\Models\Country;
 use App\Models\ProductType;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use App\Exports\OrdersExport;
+use Maatwebsite\Excel\Facades\Excel;
+;
 use PDF;
 
 
@@ -205,6 +208,14 @@ class OrderController extends Controller
 
     
         return $pdf->download('table.pdf');
+    }
+
+    public function export()
+    {
+        
+        return Excel::download(new OrdersExport, 'orders.xlsx');
+        dd('hi');
+
     }
     
 

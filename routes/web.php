@@ -49,5 +49,7 @@ Route::get('/addorder', [LoginRegisterController::class, 'addorder'])->name('add
 
 // Resource route
 Route::resource('orders', OrderController::class);
-Route::get('/orders/{id}/generate-pdf/{products_id}', [OrderController::class, 'generatePdf'])->name('orders.generatePdf');   
+Route::get('/orders/{id}/generate-pdf/{products_id}', [OrderController::class, 'generatePdf'])->name('orders.generatePdf');
+Route::get('/export-order', [OrderController::class, 'export'])->name('orders.export');
+
 
