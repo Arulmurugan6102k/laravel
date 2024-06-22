@@ -154,7 +154,7 @@ class LoginRegisterController extends Controller
              });
      
              // Paginate results
-             $perPage = 10;
+             $perPage = 8;
              $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage();
              $path = \Illuminate\Pagination\Paginator::resolveCurrentPath();
              $paginatedResults = new \Illuminate\Pagination\LengthAwarePaginator(

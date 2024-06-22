@@ -65,7 +65,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //    Validate incoming request data        
+        //Validate incoming request data        
         $request->validate([
             'customer_name' => 'required',
             'customer_email' => 'required',
@@ -152,7 +152,7 @@ class OrderController extends Controller
             ->where('id', $id)
             ->update(['is_deleted' => 1]);
 
-        return redirect()->route('dashboard')->with('success', 'Order deleted successfully');
+            return response()->json(['success' => 'Item deleted successfully.']);
     }
 
 
@@ -187,7 +187,7 @@ class OrderController extends Controller
          
         $countries = \DB::table('countries')->pluck('name', 'id')->toArray();
 
-        $productIdsArray = explode(',', $products_id); // Convert to array
+        $productIdsArray = explode(',', $products_id);// Convert to array
         // Query products based on the IDs provided
         $products = Product::whereIn('id', $productIdsArray)->get();
 
@@ -239,7 +239,7 @@ class OrderController extends Controller
                 $data[] = $cell->getValue();
             }
 
-            // Assuming the first row is the header
+            //  if first row is the header
             if ($row->getRowIndex() === 1) {
                 continue;
             }

@@ -9,47 +9,56 @@ class Order extends Model
 {
     use HasFactory;
 
-        // Define the attributes that are mass assignable
-        protected $fillable = [
-            'order_no',
-            'customer_name',
-            'customer_email',
-            'customer_mob_no',
-            'customer_country_id',
-            'product_type_id',
-            'products_id',
-            'order_amount',
-            'created_date',
-            'created_by',
-            'modified_date',
-            'modified_by',
-            'is_deleted',
-            'deleted_date',
-            'deleted_by',
-        ];
+    // Define the attributes that are mass assignable
+    protected $fillable = [
+        'order_no',
+        'customer_name',
+        'customer_email',
+        'customer_mob_no',
+        'customer_country_id',
+        'product_type_id',
+        'products_id',
+        'order_amount',
+        'created_date',
+        'created_by',
+        'modified_date',
+        'modified_by',
+        'is_deleted',
+        'deleted_date',
+        'deleted_by',
+    ];
 
-        public function setOrderNoAttribute($value)
+    // Mutator to ensure products_id is stored as a JSON string
+    public function setProductsIdAttribute($value)
     {
-        $this->attributes['order_no'] = 'ORD_' . $this->id;
-    }
-
-        public function setProductsIdAttribute($value)
-    {
-        // Ensure products_id is always stored as a JSON string
         $this->attributes['products_id'] = json_encode($value);
     }
 
+    // Accessor to decode the JSON string to an array
     public function getProductsIdAttribute($value)
     {
-        // Check if the value is already an array, if not decode it
         return is_string($value) ? json_decode($value, true) : $value;
     }
-    
-        // Define the attributes that should be cast to native types
-        protected $casts = [
-            'order_amount' => 'float',
-            'created_date' => 'datetime',
-            'modified_date' => 'datetime',
-            'deleted_date' => 'datetime',
-        ];
+
+    // Define the attributes that should be cast to native types
+    protected $casts = [
+        'order_amount' => 'float',
+        'created_date' => 'datetime',
+        'modified_date' => 'datetime',
+        'deleted_date' => 'datetime',
+    ];
+
+    // Override the save method to set order_no
+    public function save(array $options = [])
+    {
+        if (empty($this->order_no)) {
+            if (!$this->exists) {
+                parent::save($options);
+            }
+            $this->order_no = '#order_no_' . $this->id;
+        }
+
+        // Save the model
+        return parent::save($options);
+    }
 }

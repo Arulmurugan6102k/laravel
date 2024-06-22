@@ -107,6 +107,16 @@
             <i class="icon wb-check" aria-hidden="true"></i> {{ session('success') }}
         </div>
     @endif
+
+    <div id="alertBox" class="alert dark alert-icon alert-success alert-dismissible alertDismissible z-index-1 d-none" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    <i class="icon wb-check" aria-hidden="true"></i> {{ session('success') }}
+    Item deleted successfully.
+</div>
+
+    
     <!-- Modal for Preview -->
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -387,7 +397,7 @@
                                             @endphp
                                             <tbody id="table-body-content">
                                                 @foreach($paginatedResults as $order) 
-                                                                                                <tr>
+                                                                                                <tr id="item-{{$order->id}}">
                                                                                                
                                                                                                     <td style="
                                                                                                         width: 56px;
@@ -439,16 +449,10 @@
                                                                                                                 <i class='fa-solid fa-file-pdf'></i>
                                                                                                             </a>
                                                                                                             <a href="#" class="btn btn-danger btn-circle delete-button"
-                                                                                                                data-order="{{ $order->id }}">
+                                                                                                                id="{{ $order->id }}">
                                                                                                                 <i class="fas fa-trash"></i>
                                                                                                             </a>
                                                                                                         </div>
-                                                                                                        <form id="delete-form"
-                                                                                                            action="{{ route('orders.destroy', $order->id) }}"
-                                                                                                            method="POST" style="display: none;">
-                                                                                                            @csrf
-                                                                                                            @method('DELETE')
-                                                                                                        </form>
                                                                                     </div>
                                                                                     </td>
                                                                                     </tr>
@@ -570,14 +574,28 @@
             }	
         });
 
-             // Click event handler for delete buttons
-        $('.delete-button').on('click', function(e) {
-            e.preventDefault();
-            let orderId = $(this).data('order');
-            console.log(orderId)
+        $('.delete-button').on('click', function() {
+            var id = $(this).attr('id')
+            // console.log(id)
+            var row = $('#item-' + id);
 
-            if (confirm('Are you sure you want to delete this order?')) {
-                $('#delete-form-' + orderId).submit();
+            if (confirm('Are you sure you want to delete this item?')) {
+                $.ajax({ 
+                    url: 'orders/' + id,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(result) {
+                        row.remove();
+                        $('#alertBox').removeClass('d-none')
+                           
+                    },
+                    error: function(xhr) {
+                        
+                        alert('Failed to delete item.');
+                    }
+                });
             }
         });
 
@@ -598,8 +616,7 @@
                 Type: ${fileType}
             `);
             
-            // Optional: Load preview of the file (you can implement this based on your needs)
-            // For example, using FileReader to read and display contents
+
             var reader = new FileReader();
             reader.onload = function(e) {
                 var data = e.target.result;
