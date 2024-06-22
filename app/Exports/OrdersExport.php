@@ -23,7 +23,7 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
     public function collection()
     {
         $data = [];
-
+    
         // Fetch orders with left joins on product_types and countries
         $orders = Order::whereIn('orders.id', $this->orderIds)
             ->leftJoin('product_types', 'orders.product_type_id', '=', 'product_types.main_id')
@@ -37,19 +37,31 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
                 'orders.order_amount',
                 'countries.name as country_name',
                 'product_types.product_type_name as product_type_name',
-                'orders.products_id' 
+                'orders.products_id'
             )
             ->where('orders.is_deleted', 0)
             ->get();
-
+    
         foreach ($orders as $order) {
-            // Explode the product_ids string into an array
-   
-
+            // Handle the case where $order->products_id is already an array
+            $productIds = is_array($order->products_id) ? $order->products_id : explode(',', $order->products_id);
+    
             // Fetch product data associated with the order
-            $products = Product::whereIn('id', $order->products_id)->get();
-
-            
+            $products = Product::whereIn('id', $productIds)->get();
+    
+            // Initialize arrays to store product names and prices
+            $productNames = [];
+            $productPrices = [];
+    
+            foreach ($products as $product) {
+                $productNames[] = $product->product_name;
+                $productPrices[] = $product->product_cost;
+            }
+    
+            // Join product names and prices with comma and space
+            $productNameStr = implode(', ', $productNames);
+            $productPriceStr = implode(', ', $productPrices);
+    
             $data[] = [
                 'ID' => $order->id,
                 'Order Number' => $order->order_no,
@@ -59,32 +71,14 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
                 'Order Amount' => $order->order_amount,
                 'Country' => $order->country_name,
                 'Product Type' => $order->product_type_name,
-                'Product Name' => '',
-                'Product Price' => '',
-                
+                'Product Name' => $productNameStr,
+                'Product Price' => $productPriceStr,
             ];
-
-            
-            foreach ($products as $product) {
-                $data[] = [
-                    'ID' => '',
-                    'Order Number' => '',
-                    'Customer Name' => '',
-                    'Customer Email' => '',
-                    'Customer Mobile Number' => '',
-                    'Order Amount' => '',
-                    'Country' => '',
-                    'Product Type' => '',
-                    'Product Name' => $product->product_name,
-                    'Product Price' => $product->product_cost,
-                    'Product Image' => $product->product_name,
-                    
-                ];
-            }
         }
-
+    
         return collect($data);
     }
+    
 
     public function headings(): array
     {
@@ -99,7 +93,6 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             'Product Type',
             'Product Name',
             'Product Price',
-            
         ];
     }
 

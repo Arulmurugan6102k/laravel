@@ -9,8 +9,9 @@ use App\Models\ProductType;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Exports\OrdersExport;
-use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Maatwebsite\Excel\Facades\Excel;
+use Log;
 
 use PDF;
 
@@ -221,11 +222,76 @@ class OrderController extends Controller
 
     public function import(Request $request)
     {
-       
+        $request->validate([
+            'file' => 'required|mimes:xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $spreadsheet = IOFactory::load($file->getPathname());
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        foreach ($worksheet->getRowIterator() as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false);
+
+            $data = [];
+            foreach ($cellIterator as $cell) {
+                $data[] = $cell->getValue();
+            }
+
+            // Assuming the first row is the header
+            if ($row->getRowIndex() === 1) {
+                continue;
+            }
+
+            // Convert product names to IDs
+            $productNames = explode(',', $data[8]); // Assuming product names are in the ninth column
+
+            $productIds = [];
+            foreach ($productNames as $productName) {
+                // Query product by name
+                $productName = trim($productName); // Trim whitespace from product name
+                $product = Product::where('product_name', $productName)->first();
+                if ($product) {
+                    $productIds[] = $product->id;
+                } else {
+                    // Log product not found
+                    Log::warning("Product with name '{$productName}' not found in the database.");
+                    // You can handle this case according to your application's requirements
+                }
+            }
+
+            // Convert product IDs to JSON string
+            $productIdsJson = json_encode($productIds);
+
+            // Convert country name to ID
+            $countryName = $data[6]; // Assuming country name is in the seventh column
+            $country = Country::where('name', $countryName)->first();
+            $countryId = $country ? $country->id : null;
+
+            // Convert product type name to ID
+            $productTypeName = $data[7]; // Assuming product type name is in the eighth column
+            $productType = ProductType::where('product_type_name', $productTypeName)->first();
+            $productTypeId = $productType ? $productType->main_id : null;
+
+            // Insert into database
+            Order::create([
+                'products_id' => $productIdsJson, // Store product IDs as JSON string
+                'order_no' => $data[1],
+                'customer_name' => $data[2],
+                'customer_email' => $data[3],
+                'customer_mob_no' => $data[4],
+                'customer_country_id' => $countryId,
+                'product_type_id' => $productTypeId,
+                'order_amount' => $data[5],
+                // 'product_name' => $data[1],
+                // 'cost' => $data[3], // Assuming cost is in the fourth column
+            ]);
+
+            // Clear product IDs array for next iteration
+            $productIds = [];
+        }
+
         return redirect()->route('dashboard')->with('success', 'Order updated successfully.');
     }
-    
-
-
-
-}
+    }
