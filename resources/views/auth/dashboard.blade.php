@@ -138,37 +138,32 @@
         </div>
     </div>
 </div>
-    <!-- Page Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
         <div id="content">
-
-            <!-- Topbar -->
+            <!-- manager -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                 <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <button href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                                style="margin-left: -13;">Manage</button>
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item " href="{{ route('showprod') }}" data-target="#logoutModal">
-                                PRODUCT
-                            </a>
-                            <a class="dropdown-item" href="{{ route('showprodtype') }}" data-target="#logoutModal">
-                                PRODUCT TYPE
-                            </a>
-
-                        </div>
-                    </li>
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+            style="margin-left: -13px;">Manage</button>
+    </a>
+    <!-- Dropdown - User Information -->
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
+        aria-labelledby="userDropdown">
+        <a class="dropdown-item" href="{{ route('showprod') }}">
+            PRODUCT
+        </a>
+        <a class="dropdown-item" href="{{ route('showprodtype') }}">
+            PRODUCT TYPE
+        </a>
+    </div>
+</li>
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -187,7 +182,8 @@
 
                 </ul>
             </nav>
-            <!-- delete Modal-->
+            
+            <!-- logout model -->
             <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -494,6 +490,16 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- jQuery first, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
     <script>
 
@@ -572,6 +578,12 @@
             } else {
                 $(".checkmark").prop("checked", false);
             }	
+
+            
+            $(".checkmark").change(function() {
+                var allChecked = $(".checkmark:checked").length === $(".checkmark").length;
+                $("#selectAll").prop("checked", allChecked);
+            });
         });
 
         $('.delete-button').on('click', function() {
@@ -620,8 +632,6 @@
             var reader = new FileReader();
             reader.onload = function(e) {
                 var data = e.target.result;
-                // Display preview if needed
-                // Example: $('#filePreview').html('<pre>' + data + '</pre>');
             };
             reader.readAsText(file);
 
