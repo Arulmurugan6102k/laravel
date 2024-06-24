@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\Auth\ProductController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductBranchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,10 +49,16 @@ Route::get('deleteproductstype/{id}', [ProductController::class, 'deletetype'])-
 // Order route
 Route::get('/addorder', [LoginRegisterController::class, 'addorder'])->name('addorder');
 
-// Resource route
+// Orders Resource route
 Route::resource('orders', OrderController::class);
 Route::get('/orders/{id}/generate-pdf/{products_id}', [OrderController::class, 'generatePdf'])->name('orders.generatePdf');
 Route::get('/export-order', [OrderController::class, 'export'])->name('orders.export');
 Route::post('/import-order', [OrderController::class, 'import'])->name('orders.import');
+
+// Branch Resource route
+Route::resource('branches', BranchController::class);
+
+// Product Branch Resource route
+Route::resource('productsbranches', ProductBranchController::class);
 
 

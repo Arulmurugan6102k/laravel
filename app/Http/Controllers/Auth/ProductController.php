@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductType;
 use Illuminate\Support\Facades\DB;
+use App\Events\ProductTypeAdded;
 
 
 
@@ -104,21 +105,27 @@ class ProductController extends Controller
 
     public function addtype(Request $request) 
     {
-        //  Validate incoming request data
-       $request->validate([
-        'product_type_name' => 'required|string|max:255',
-        'product_type_code' => 'required|numeric',
-        'product_status' => 'required|boolean'
+        // Validate incoming request data
+        $request->validate([
+            'product_type_name' => 'required|string|max:255',
+            'product_type_code' => 'required|numeric',
+            'product_status' => 'required|boolean'
         ]);
-
-        ProductType::create([
+    
+        // Create a new ProductType instance and save it to the database
+        $productType = ProductType::create([
             'product_type_name' => $request->product_type_name,
             'product_type_code' => $request->product_type_code,
             'is_active' => $request->product_status
-        ]);  
-        
+        ]);
+    
+        // Trigger an event to handle updates to related tables (if necessary)
+        event(new ProductTypeAdded($productType));
+    
+        // Redirect to a route (e.g., showprodtype) with a success message
         return redirect()->route('showprodtype')->with('success', 'Product type added successfully.');
     }
+    
 
     public function edittype(Request $request, $id) 
     {

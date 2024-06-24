@@ -151,7 +151,24 @@
     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-            style="margin-left: -13px;">Manage</button>
+            style="margin-left: -13px;">Manage Branch</button>
+    </a>
+    <!-- Dropdown - User Information -->
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
+        aria-labelledby="userDropdown">
+        <a class="dropdown-item" href="{{ route('branches.index') }}">
+            BRANCH
+        </a>
+        <a class="dropdown-item" href="{{ route('productsbranches.index') }}">
+            PRODUCT BRANCH
+        </a>
+    </div>
+</li>
+                    <li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+            style="margin-left: -13px;">Manage Products</button>
     </a>
     <!-- Dropdown - User Information -->
     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
@@ -489,7 +506,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

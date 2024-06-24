@@ -22,4 +22,6 @@ class ProductType extends Model
         'deleted_by'
     ];
 
+    
+
 }

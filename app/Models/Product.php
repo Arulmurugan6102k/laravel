@@ -28,10 +28,4 @@ class Product extends Model
         'deleted_by',
     ];
 
-    // public function productType()
-    // {
-    //     return $this->belongsTo(ProductType::class, 'product_type_name');
-    // }
-
-
 }

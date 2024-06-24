@@ -18,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ProductTypeAdded::class => [
+            UpdateProductsBranchesForProductType::class,
+        ],
+        BranchAdded::class => [
+            UpdateProductsBranchesForBranch::class,
+        ],
     ];
 
     /**
