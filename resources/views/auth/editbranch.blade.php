@@ -35,47 +35,44 @@
 </head>
 
 <body>
-    <div class="container" style="
-    margin-top: 5%;
-">
-
+<form action="{{ route('branches.update', $branch->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PATCH')
+    <div class="container" style="margin-top: 5%;">
         <div class="row justify-content-center mt-5">
             <div class="col-md-12 col-md-12 shadow-lg bg-body" style="border-radius:18px;">
                 <div class="p-5">
-                    <div class="text-center h1 mb-4">ADD BRANCH</div>
-                    <form action="{{ route('branches.store') }}" method="post" enctype="multipart/form-data">
-                    @csrf
+                    <div class="text-center h1 mb-4">EDIT BRANCH</div>
                     <div class="row">
                         <div class="col-6 input-group-lg">
                             <label for="branch-name" class="form-label">Branch name</label>
-                            <input type="text" class="form-control" id="branch-name" name="branch_name">
+                            <input type="text" class="form-control" id="branch-name" name="branch_name" value="{{ $branch->branch_name }}">
                         </div>
                         <div class="col-6 input-group-lg">
                             <label for="branch-prefix" class="form-label">Branch Prefix</label>
-                            <input type="text" class="form-control" id="branch-prefix" name="branch_prefix">
+                            <input disabled type="text" class="form-control" id="branch-prefix" name="branch_prefix" value="{{ $branch->branch_prefix }}">
                         </div>
-
                     </div>
                     <div class="d-flex justify-content-center" style="margin-top: 30px;">
-                        <div class="text-center ">
-                            <input type="submit" class="text-center btn btn-lg btn-success mt-4 "
-                                style="margin-right:10px; width:100px;" value="Add">
+                        <div class="text-center">
+                            <input type="submit" class="text-center btn btn-lg btn-success mt-4" style="margin-right:10px; width:100px;" value="Edit">
                         </div>
                         <div class="text-center">
-                            <input id="cancelButton" class="text-center btn btn-lg btn-danger mt-4 "
-                                style="margin-left:10px; width:100px;" value="Cancel">
+                            <input id="cancelButton" class="text-center btn btn-lg btn-danger mt-4" style="margin-left:10px; width:100px;" value="Cancel">
                         </div>
-                        <script>
-                            document.getElementById('cancelButton').onclick = function () {
-                                window.location.href = "http://localhost/test/userloginregister/branches";
-                            };
-                        </script>
-                        </form>
                     </div>
-
                 </div>
             </div>
         </div>
+    </div>
+</form>
+
+<script>
+    document.getElementById('cancelButton').onclick = function () {
+        window.location.href = "{{ route('branches.index') }}";
+    };
+</script>
+
     </div>
 
 

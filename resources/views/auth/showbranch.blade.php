@@ -188,15 +188,15 @@
                                                             <td>
                                                                 <div class="d-flex jsutify-content-center align-itmes-center">
                                                                     <div class="">
-                                                                        <a href="{{ route('branches.update', ['id' => $branch->id]) }}"
+                                                                        <a id="{{$branch->id}}" href="{{ route('branches.edit', $branch->id ) }}"
                                                                             class="btn btn-primary btn-circle me-2">
                                                                             <i class="fas fa-edit"></i>
                                                                         </a>
                                                                     </div>
-                                                                    <a href=""
-                                                                        class="btn btn-danger btn-circle">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </a>
+                                                                    <a href="" class="btn btn-danger btn-circle delete-product" data-product-id="{{ $branch->id }}"
+                                                                    id="delete">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
                                                                 </div>
                                                                 </td>
                                             </td>
@@ -229,7 +229,7 @@
 
 
 
-</body><!-- Bootstrap core JavaScript-->
+</body>
 
 </html>
 
@@ -239,19 +239,29 @@
     }
 </script>
 <script>
-$(document).ready(function() {
-    $('#delete').on('click', function() {
-        // Assuming you want to get the id of the product to be deleted
-        let id = $(this).data('product-id'); // Use data attribute to store product id
-        if(confirm('Are you sure you want to delete?')) {
-            // Assuming your delete URL structure is correct
-            $("a").attr("href", "http://localhost/userloginregister/deleteproducts/" + id);
-        } else {
-            return false;
-        }
-    });
-});
+  $(document).ready(function () {
+        $('.delete-product').on('click', function (e) {
+            e.preventDefault(); 
+            let productId = $(this).data('product-id');
+            let deleteUrl = "{{ url('/branches') }}" + '/' + productId;
 
+            if (confirm('Are you sure you want to delete?')) {
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
 </script>
 
 

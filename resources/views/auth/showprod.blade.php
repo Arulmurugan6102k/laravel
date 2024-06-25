@@ -279,6 +279,7 @@
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
                                                         </div>
+                                                        
                                                         <a href="" class="btn btn-danger btn-circle" data-product-id="{{ $product->id }}"
                                                             id="delete">
                                                             <i class="fas fa-trash"></i>

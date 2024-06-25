@@ -15,7 +15,6 @@
             <div class="card-body ">
             <form action="{{ route('products.type.update', $productType->main_id) }}" method="post"id="product-form">
                     @csrf
-           
             <div class="row">
                 <div class="col-6 input-group-lg">
                     <label for="product-name" class="form-label">Product name</label>

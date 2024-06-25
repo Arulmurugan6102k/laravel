@@ -55,7 +55,8 @@ class BranchController extends Controller
      */
     public function edit(string $id)
     {
-        return view('auth.editranch');
+        $branch = Branch::find($id);
+        return view('auth.editbranch', compact('branch'));
     }
 
     /**
@@ -64,11 +65,13 @@ class BranchController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'branch_name' => 'require'
+            'branch_name' => 'required',
         ]);
         $branch = Branch::find($id);
         $branch->branch_name = $request->branch_name;
         $branch->save();
+
+        return redirect()->route('branches.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -76,6 +79,10 @@ class BranchController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $branch = Branch::findOrFail($id);
+        $branch->delete();
+
+        // Optionally, you can return a response or redirect back with a message
+        return response()->json(['message' => 'branch deleted successfully']);
     }
 }
