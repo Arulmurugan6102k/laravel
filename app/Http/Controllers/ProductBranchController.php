@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\ProductType;
+use App\Models\Branch;
+use App\Models\ProductBranch;
 use Illuminate\Http\Request;
+
 
 class ProductBranchController extends Controller
 {
@@ -11,7 +14,11 @@ class ProductBranchController extends Controller
      */
     public function index()
     {
-        return view('auth.showproductbranch');
+
+        $productTypes = productType::all();
+        $branches = Branch::all();
+        $ProductBranches = ProductBranch::all();
+        return view('auth.showproductbranch', compact('productTypes', 'branches', 'ProductBranches'));
     }
 
     /**
@@ -19,7 +26,10 @@ class ProductBranchController extends Controller
      */
     public function create()
     {
-        return view('auth.addproductbranch');
+        $productTypeName = productType::all();
+        $branchName = Branch::all();
+        $ProductBranches = ProductBranch::all();
+        return view('auth.addproductbranch', compact('productTypeName', 'branchName', 'ProductBranches'));
     }
 
     /**
@@ -27,7 +37,18 @@ class ProductBranchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $products = $request->input('products');
+
+        foreach ($products as $product) {
+            ProductBranch::updateOrCreate(
+                ['product_type_id' => $product['product_id'],
+                 'branch_id' => $product['branch_id']
+                ],
+                ['status' => $product['status']]
+            );
+        }
+
+        return response()->json(['message' => 'Product branches updated successfully']);
     }
 
     /**

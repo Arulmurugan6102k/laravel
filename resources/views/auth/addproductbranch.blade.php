@@ -122,71 +122,84 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid" style="
-    margin-top: 5%;
-">
-
+    <div class="container-fluid" style="margin-top: 30px;">
         <!-- Page Heading -->
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-center">
                 <h6 class="mt-2 m-0 font-weight-bold text-primary">Edit branch products</h6>
-                <div class="d-flex justify-content-center">
-
-                </div>
+                <div class="d-flex justify-content-center"></div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row"></div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered dataTable" id="dataTable" width="100%"
-                                    cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>no.</th>
-                                            <th>products name</th>
-                                            <th>chn</th>
-                                            <th>del</th>
-                                            <th>hyd</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mobile</td>
-                                            <td>
-                                                <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider"></span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider"></span>
-                                                </label>
-                                            </td>
-                                            <td><label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider"></span>
-                                                </label></td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <form id="product-branch-form">
+                        @csrf
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered dataTable" id="dataTable" width="100%"
+                                        cellspacing="0" role="grid" aria-describedby="dataTable_info"
+                                        style="width: 100%;">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>no.</th>
+                                                <th>products name</th>
+                                                @foreach ($branchName as $branch)
+                                                    <th>{{ $branch->branch_prefix }}</th>
+                                                @endforeach
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($productTypeName as $productType)
+                                                                                    <tr>
+                                                                                        <td>x</td>
+                                                                                        <td>{{ $productType->product_type_name }}</td>
+                                                                                        @foreach ($branchName as $branch)
+                                                                                                                                    <td>
+                                                                                                                                        <label class="switch">
+                                                                                                                                            @php
+                                                                                                                                                $status = $ProductBranches->first(function ($status) use ($productType, $branch) {
+                                                                                                                                                    return $status->product_type_id === $productType->main_id && $status->branch_id === $branch->id;
+                                                                                                                                                });
+                                                                                                                                            @endphp
+                                                                                                                                            <input
+                                                                                                                                                id="product-{{ $productType->main_id }}-branch-{{ $branch->id }}"
+                                                                                                                                                type="checkbox"
+                                                                                                                                                data-product-id="{{ $productType->main_id }}"
+                                                                                                                                                data-branch-id="{{ $branch->id }}" {{ $status->status == 1 ? 'checked' : '' }}>
+                                                                                                                                            <span class="slider"></span>
+                                                                                                                                        </label>
+                                                                                                                                    </td>
+                                                                                        @endforeach
+                                                                                    </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center ">
+                                <div class="text-center ">
+                                    <input type="submit" class="text-center btn btn-lg btn-success mt-4 "
+                                        style="margin-right:10px; width:100px;" value="Add">
+                                </div>
+                                <div class="text-center">
+                                    <input id="cancelButton" class="text-center btn btn-lg btn-danger mt-4 "
+                                        style="margin-left:10px; width:100px;" value="Cancel">
+                                </div>
+                                <script>
+                                    document.getElementById('cancelButton').onclick = function () {
+                                        window.location.href = "http://localhost/test/userloginregister/productsbranches";
+                                    };
+                                </script>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center align-items-center">
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 
@@ -228,6 +241,46 @@
             });
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#product-branch-form').on('submit', function (event) {
+                event.preventDefault();
+
+                var products = [];
+
+                $('input[type=checkbox]').each(function () {
+                    var product_id = $(this).data('product-id');
+                    var branch_id = $(this).data('branch-id');
+                    var status = $(this).is(':checked') ? 1 : 0;
+
+                    products.push({
+                        product_id: product_id,
+                        branch_id: branch_id,
+                        status: status
+                    });
+
+
+                });
+                console.log(products)
+                $.ajax({
+                    url: '{{ route("productsbranches.store") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        products: products
+                    },
+                    success: function (response) {
+                        alert('Product branches updated successfully!');
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                        alert('An error occurred while updating product branches.');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 

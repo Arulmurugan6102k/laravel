@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductType;
-use Illuminate\Support\Facades\DB;
-use App\Events\ProductTypeAdded;
+use Illuminate\Support\Facades\DB;;
 
 
 
@@ -119,8 +118,6 @@ class ProductController extends Controller
             'is_active' => $request->product_status
         ]);
     
-        // Trigger an event to handle updates to related tables (if necessary)
-        event(new ProductTypeAdded($productType));
     
         // Redirect to a route (e.g., showprodtype) with a success message
         return redirect()->route('showprodtype')->with('success', 'Product type added successfully.');

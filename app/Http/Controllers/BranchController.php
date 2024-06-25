@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Branch;
-use App\Events\BranchAdded;
 
 class BranchController extends Controller
 {
@@ -12,7 +11,8 @@ class BranchController extends Controller
      */
     public function index()
     {
-        return view('auth.showbranch');
+        $branches = Branch::all();
+        return view('auth.showbranch', compact('branches'));
     }
 
     /**
@@ -38,7 +38,6 @@ class BranchController extends Controller
             'branch_name' => $request->branch_name,
             'branch_prefix' => $branchPrefix,
         ]);
-        event(new BranchAdded($branch));
 
         return redirect()->route('branches.index')->with('success', 'Order added successfully.');
     }
@@ -56,7 +55,7 @@ class BranchController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('auth.editranch');
     }
 
     /**
@@ -64,7 +63,12 @@ class BranchController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'branch_name' => 'require'
+        ]);
+        $branch = Branch::find($id);
+        $branch->branch_name = $request->branch_name;
+        $branch->save();
     }
 
     /**

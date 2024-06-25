@@ -1,6 +1,16 @@
 <html lang="en">
+<link type="text/css" rel="stylesheet" id="dark-mode-custom-link">
+<link type="text/css" rel="stylesheet" id="dark-mode-general-link">
+<style lang="en" type="text/css" id="dark-mode-custom-style"></style>
+<style lang="en" type="text/css" id="dark-mode-native-style"></style>
+<style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
 
 <head>
+    <link type="text/css" rel="stylesheet" id="dark-mode-custom-link">
+    <link type="text/css" rel="stylesheet" id="dark-mode-general-link">
+    <style lang="en" type="text/css" id="dark-mode-custom-style"></style>
+    <style lang="en" type="text/css" id="dark-mode-native-style"></style>
+    <style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -29,14 +39,6 @@
 </head>
 
 <body>
-    @if(session('success'))
-        <div class="alert dark alert-icon alert-success alert-dismissible alertDismissible z-index-1" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">×</span>
-            </button>
-            <i class="icon wb-check" aria-hidden="true"></i> {{ session('success') }}
-        </div>
-    @endif
     <!-- Page Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -46,17 +48,17 @@
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                <h1 class="h3 mb-0 text-gray-800">branch</h1>
+                <h1 class="h3 mb-0 text-gray-800">branch products</h1>
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
-                     <!-- Nav Item - User Information -->
-                     <li class="nav-item dropdown no-arrow">
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
                             aria-labelledby="userDropdown">
                             <a class="dropdown-item " href="{{ route('addprod') }}" data-target="#logoutModal">
-                            ADD ORDER
+                                ADD ORDER
                             </a>
                             <a class="dropdown-item" href="{{ route('addprodtype') }}" data-target="#logoutModal">
                                 MANAGE ORDER
@@ -68,14 +70,14 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <button href="#"
-                                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" style="margin-left: -13;" >Manage</button>
+                            <button href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                style="margin-left: -13;">Manage</button>
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in text-center"
                             aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="{{ route('showprod') }}" data-target="#logoutModal">
-                            PRODUCT
+                                PRODUCT
                             </a>
                             <a class="dropdown-item" href="{{ route('dashboard') }}" data-target="#logoutModal">
                                 DASHBOARD
@@ -134,27 +136,18 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
-                <h6 class="mt-2 m-0 font-weight-bold text-primary">Branch list</h6>
+                <h6 class="mt-2 m-0 font-weight-bold text-primary">Branch Product list</h6>
                 <div class="d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
-                    <form method="GET" action="{{ route('showprodtype') }}" id="filter-form" class="form-inline">
-                            <div class="input-group">
-                                <input type="text" name="product_search" class="form-control border-1 small"
-                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"
-                                    value="{{ request('product_search') }}">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+
                         <div>
-                        <button
-                                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" style="margin-left: 16px;height: 37.22222px;width: 155px;" >
-                                <a style="text-decoration: none; color: inherit;" href="{{ route('branches.create') }}">
-                                <span><i class="fas fa-add"></i></span>
-                                Add Branch</button>
+                            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                style="margin-left: 16px;height: 37.22222px;width: 170px;">
+                                <a style="text-decoration: none; color: inherit;"
+                                    href="http://localhost/test/userloginregister/productsbranches/create">
+                                    <span><i class="fas fa-add"></i></span>
+                                    Add Product Branch</a></button><a style="text-decoration: none; color: inherit;"
+                                href="http://localhost/test/userloginregister/productsbranches/create">
                             </a>
                         </div>
                     </div>
@@ -162,57 +155,53 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row"></div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered dataTable" id="dataTable" width="100%"
-                                    cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                    <thead>
-                                       
-                                        <tr role="row">
-                                            <th>no.</th>
-                                            <th>branch name</th>
-                                            <th>branch prefix</th>
-                                            <th>Action</th>
-                                        </tr>
-                                       
-                                    </thead>
-                                    <tbody>
-                                         @foreach($branches as $branch )
-                                                        <tr>
-                                                       
-                                                            <td>1</td>
-                                                            <td>{{$branch->branch_name}}</td>
-                                                            <td>{{$branch->branch_prefix}}</td>
-                                                            <td>
-                                                                <div class="d-flex jsutify-content-center align-itmes-center">
-                                                                    <div class="">
-                                                                        <a href="{{ route('branches.update', ['id' => $branch->id]) }}"
-                                                                            class="btn btn-primary btn-circle me-2">
-                                                                            <i class="fas fa-edit"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                    <a href=""
-                                                                        class="btn btn-danger btn-circle">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </a>
-                                                                </div>
-                                                                </td>
-                                            </td>
+                        @csrf
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered dataTable" id="dataTable" width="100%"
+                                        cellspacing="0" role="grid" aria-describedby="dataTable_info"
+                                        style="width: 100%;">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>no.</th>
+                                                <th>products name</th>
+                                                @foreach ($branches as $branch)
+                                                    <th>{{ $branch->branch_prefix}}</th>
+                                                @endforeach
                                             </tr>
-                                            @endforeach
-                            </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach ($productTypes as $index => $productType)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $productType->product_type_name }}</td>
+                                                @foreach ($branches as $branch)
+                                                    <td>
+                                                        @php
+                                                            $status = $ProductBranches->first(function($status) use ($productType, $branch) {
+                                                                return $status->product_type_id === $productType->main_id && $status->branch_id === $branch->id;
+                                                            });
+                                                        @endphp
+                                                        {{ $status ? $status->status : 'N/A' }}
+                                                    </td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    </div>
 
-    </div>
+
 
 
 
@@ -229,30 +218,33 @@
 
 
 
+
+
+
+
+    <script>
+        function submitForm() {
+            document.getElementById('filter-form').submit();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#delete').on('click', function () {
+
+                let id = $(this).data('product-id');
+                if (confirm('Are you sure you want to delete?')) {
+
+                    $("a").attr("href", "http://localhost/userloginregister/deleteproducts/" + id);
+                } else {
+                    return false;
+                }
+            });
+        });
+
+    </script>
+
+
+
 </body><!-- Bootstrap core JavaScript-->
 
 </html>
-
-<script>
-    function submitForm() {
-        document.getElementById('filter-form').submit();
-    }
-</script>
-<script>
-$(document).ready(function() {
-    $('#delete').on('click', function() {
-        // Assuming you want to get the id of the product to be deleted
-        let id = $(this).data('product-id'); // Use data attribute to store product id
-        if(confirm('Are you sure you want to delete?')) {
-            // Assuming your delete URL structure is correct
-            $("a").attr("href", "http://localhost/userloginregister/deleteproducts/" + id);
-        } else {
-            return false;
-        }
-    });
-});
-
-</script>
-
-
-
