@@ -163,6 +163,7 @@
                                     <table class="table table-bordered dataTable" id="dataTable" width="100%"
                                         cellspacing="0" role="grid" aria-describedby="dataTable_info"
                                         style="width: 100%;">
+                                        
                                         <thead>
                                             <tr role="row">
                                                 <th>no.</th>
@@ -175,7 +176,7 @@
                                         <tbody>
                                         @foreach ($productTypes as $index => $productType)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $index+1 }}</td>
                                                 <td>{{ $productType->product_type_name }}</td>
                                                 @foreach ($branches as $branch)
                                                     <td>
@@ -188,6 +189,7 @@
                                                     </td>
                                                 @endforeach
                                             </tr>
+                                            
                                         @endforeach
 
                                         </tbody>

@@ -151,9 +151,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($productTypeName as $productType)
+                                            @foreach ($productTypeName as $index => $productType)
                                                                                     <tr>
-                                                                                        <td>x</td>
+                                                                                        <td>{{$index+1}}</td>
                                                                                         <td>{{ $productType->product_type_name }}</td>
                                                                                         @foreach ($branchName as $branch)
                                                                                                                                     <td>
@@ -167,8 +167,10 @@
                                                                                                                                                 id="product-{{ $productType->main_id }}-branch-{{ $branch->id }}"
                                                                                                                                                 type="checkbox"
                                                                                                                                                 data-product-id="{{ $productType->main_id }}"
-                                                                                                                                                data-branch-id="{{ $branch->id }}" {{ $status->status == 1 ? 'checked' : '' }}>
-                                                                                                                                            <span class="slider"></span>
+                                                                                                                                                data-branch-id="{{ $branch->id }}"
+                                                                                                                                                {{ $status && $status->status == 1 ? 'checked' : '' }}>
+                                                                                                                                            <span class="slider">
+                                                                                                                                            </span>
                                                                                                                                         </label>
                                                                                                                                     </td>
                                                                                         @endforeach
@@ -230,10 +232,10 @@
     <script>
         $(document).ready(function () {
             $('#delete').on('click', function () {
-                // Assuming you want to get the id of the product to be deleted
-                let id = $(this).data('product-id'); // Use data attribute to store product id
+                
+                let id = $(this).data('product-id'); 
                 if (confirm('Are you sure you want to delete?')) {
-                    // Assuming your delete URL structure is correct
+                    
                     $("a").attr("href", "http://localhost/userloginregister/deleteproducts/" + id);
                 } else {
                     return false;
@@ -273,6 +275,7 @@
                     },
                     success: function (response) {
                         alert('Product branches updated successfully!');
+                        $(location).attr('href', 'http://localhost/test/userloginregister/productsbranches');
                     },
                     error: function (xhr) {
                         console.log(xhr.responseText);

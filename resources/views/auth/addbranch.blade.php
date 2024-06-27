@@ -50,11 +50,6 @@
                             <label for="branch-name" class="form-label">Branch name</label>
                             <input type="text" class="form-control" id="branch-name" name="branch_name">
                         </div>
-                        <div class="col-6 input-group-lg">
-                            <label for="branch-prefix" class="form-label">Branch Prefix</label>
-                            <input type="text" class="form-control" id="branch-prefix" name="branch_prefix">
-                        </div>
-
                     </div>
                     <div class="d-flex justify-content-center" style="margin-top: 30px;">
                         <div class="text-center ">

@@ -137,18 +137,6 @@
                 <h6 class="mt-2 m-0 font-weight-bold text-primary">Branch list</h6>
                 <div class="d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
-                    <form method="GET" action="{{ route('showprodtype') }}" id="filter-form" class="form-inline">
-                            <div class="input-group">
-                                <input type="text" name="product_search" class="form-control border-1 small"
-                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"
-                                    value="{{ request('product_search') }}">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                         <div>
                         <button
                                 class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" style="margin-left: 16px;height: 37.22222px;width: 155px;" >
@@ -179,10 +167,10 @@
                                        
                                     </thead>
                                     <tbody>
-                                         @foreach($branches as $branch )
+                                         @foreach($branches as $index => $branch )
                                                         <tr>
                                                        
-                                                            <td>1</td>
+                                                            <td>{{$index+1}}</td>
                                                             <td>{{$branch->branch_name}}</td>
                                                             <td>{{$branch->branch_prefix}}</td>
                                                             <td>
